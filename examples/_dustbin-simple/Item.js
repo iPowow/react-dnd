@@ -17,11 +17,17 @@ var Item = React.createClass({
       registerType(ItemTypes.ITEM, {
         dragSource: {
           beginDrag(component) {
+            setTimeout(component.props.onBeginDrag, 100);
+
             return {
               item: {
                 name: component.props.name
               }
             };
+          },
+
+          endDrag(component, dropEffect) {
+            window.alert('endDrag ' + dropEffect);
           }
         }
       });
