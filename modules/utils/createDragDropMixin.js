@@ -14,8 +14,8 @@ var DragDropActionCreators = require('../actions/DragDropActionCreators'),
     defaults = require('lodash/object/defaults'),
     union = require('lodash/array/union'),
     without = require('lodash/array/without'),
-    isArray = require('lodash/object/isArray'),
-    isObject = require('lodash/object/isObject'),
+    isArray = require('lodash/lang/isArray'),
+    isObject = require('lodash/lang/isObject'),
     noop = require('lodash/utility/noop');
 
 function checkValidType(component, type) {
