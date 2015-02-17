@@ -14,7 +14,7 @@ var styles = {
 
     return {
       position: 'absolute',
-      webkitTransform: transform,
+      WebkitTransform: transform,
       transform: transform
     };
   }
