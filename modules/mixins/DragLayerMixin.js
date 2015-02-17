@@ -8,8 +8,8 @@ var DragFeedbackMixin = {
   },
 
   getStateFromDragDropStore() {
-    var dragStartOffset = DragDropStore.getDragStartOffset(),
-        dragOffset = DragDropStore.getDragOffset(),
+    var dragStartOffsetFromContainer = DragDropStore.getDragStartOffsetFromContainer(),
+        dragOffsetFromClient = DragDropStore.getDragOffsetFromClient(),
         draggedItemType = DragDropStore.getDraggedItemType(),
         isDragging = draggedItemType !== null;
 
@@ -17,8 +17,8 @@ var DragFeedbackMixin = {
       isDragging: isDragging,
       draggedItemType: draggedItemType,
       draggedItem: DragDropStore.getDraggedItem(),
-      x: isDragging ? dragOffset.x - dragStartOffset.x : undefined,
-      y: isDragging ? dragOffset.y - dragStartOffset.y : undefined
+      x: isDragging ? dragOffsetFromClient.x - dragStartOffsetFromContainer.x : undefined,
+      y: isDragging ? dragOffsetFromClient.y - dragStartOffsetFromContainer.y : undefined
     };
   },
 

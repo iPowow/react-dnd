@@ -38,10 +38,7 @@ var DraggableBox = React.createClass({
             return {
               effectAllowed: DropEffects.MOVE,
               dragPreview: getEmptyImage(),
-              item: {
-                id: component.props.id,
-                title: component.props.title
-              }
+              item: component.props
             };
           }
         }

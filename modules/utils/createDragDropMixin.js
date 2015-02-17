@@ -7,7 +7,6 @@ var DragDropActionCreators = require('../actions/DragDropActionCreators'),
     DefaultDragSource = require('./DefaultDragSource'),
     DefaultDropTarget = require('./DefaultDropTarget'),
     isFileDragDropEvent = require('./isFileDragDropEvent'),
-    getDragStartOffset = require('./getDragStartOffset'),
     bindAll = require('./bindAll'),
     invariant = require('react/lib/invariant'),
     assign = require('react/lib/Object.assign'),
@@ -53,6 +52,20 @@ function checkDropTargetDefined(component, type) {
     displayName
   );
 }
+
+var DragDropContext = {
+  getDragStartOffsetFromClient() {
+    return DragDropStore.getDragStartOffsetFromClient();
+  },
+
+  getDragStartOffsetFromContainer() {
+    return DragDropStore.getDragStartOffsetFromContainer();
+  },
+
+  getDragOffsetFromClient() {
+    return DragDropStore.getDragOffsetFromClient();
+  }
+};
 
 function createDragDropMixin(backend) {
   var refs = 0;
@@ -144,7 +157,7 @@ function createDragDropMixin(backend) {
         this.constructor.displayName
       );
 
-      this.constructor.configureDragDrop(this.registerDragDropItemTypeHandlers);
+      this.constructor.configureDragDrop(this.registerDragDropItemTypeHandlers, DragDropContext);
     },
 
     componentDidMount() {
@@ -206,17 +219,15 @@ function createDragDropMixin(backend) {
         return;
       }
 
-      var dragOptions = beginDrag(this, e),
-          // TODO: there should be a better way to calculate all these offsets
+      var { item, dragPreview, dragAnchors, effectsAllowed } = beginDrag(this, e),
           containerNode = this.getDOMNode(),
           containerRect = containerNode.getBoundingClientRect(),
-          { item, dragPreview, dragAnchors, effectsAllowed } = dragOptions,
-          dragOffset = backend.getDragClientOffset(this, e),
-          dragStartOffset;
+          offsetFromClient = backend.getDragOffsetFromClient(this, e),
+          offsetFromContainer;
 
-      dragStartOffset = {
-        x: dragOffset.x - containerRect.left,
-        y: dragOffset.y - containerRect.top
+      offsetFromContainer = {
+        x: offsetFromClient.x - containerRect.left,
+        y: offsetFromClient.y - containerRect.top
       };
 
       if (!effectsAllowed) {
@@ -228,8 +239,8 @@ function createDragDropMixin(backend) {
       invariant(isArray(effectsAllowed) && effectsAllowed.length > 0, 'Expected effectsAllowed to be non-empty array');
       invariant(isObject(item), 'Expected return value of beginDrag to contain "item" object');
 
-      backend.beginDrag(this, e, containerNode, dragPreview, dragAnchors, dragStartOffset, effectsAllowed);
-      DragDropActionCreators.startDragging(type, item, effectsAllowed, dragOffset, dragStartOffset);
+      backend.beginDrag(this, e, containerNode, dragPreview, dragAnchors, offsetFromContainer, effectsAllowed);
+      DragDropActionCreators.startDragging(type, item, effectsAllowed, offsetFromClient, offsetFromContainer);
 
       // Delay setting own state by a tick so `getDragState(type).isDragging`
       // doesn't return `true` yet. Otherwise browser will capture dragged state

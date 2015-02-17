@@ -64,8 +64,8 @@ function handleTopDragEnter(e) {
 function handleTopDragOver(e) {
   preventDefaultFileDropAction(e);
 
-  var coordinates = getMouseCoordinates(e);
-  DragDropActionCreators.drag(coordinates);
+  var offsetFromClient = HTML5.getDragOffsetFromClient(_currentComponent, e);
+  DragDropActionCreators.drag(offsetFromClient);
 
   // At the top level of event bubbling, use previously set drop effect and reset it.
   if (_currentDropEffect) {
@@ -124,10 +124,9 @@ var HTML5 = {
     window.removeEventListener('drop', handleTopDrop);
   },
 
-  // TODO: consolidate options
-  beginDrag(component, e, containerNode, dragPreview, dragAnchors, dragStartOffset, effectsAllowed) {
+  beginDrag(component, e, containerNode, dragPreview, dragAnchors, offsetFromContainer, effectsAllowed) {
     var { nativeEvent: { dataTransfer, target } } = e;
-    configureDataTransfer(dataTransfer, containerNode, dragPreview, dragAnchors, dragStartOffset, effectsAllowed);
+    configureDataTransfer(dataTransfer, containerNode, dragPreview, dragAnchors, offsetFromContainer, effectsAllowed);
 
     _currentComponent = component;
     _currentDragTarget = target;
@@ -177,7 +176,7 @@ var HTML5 = {
     };
   },
 
-  getDragClientOffset(component, e) {
+  getDragOffsetFromClient(component, e) {
     return {
       x: e.clientX,
       y: e.clientY

@@ -30,15 +30,14 @@ var Container = React.createClass({
   },
 
   statics: {
-    configureDragDrop(registerType) {
-      registerType(ItemTypes.BOX, {
+    configureDragDrop(registerHandler, context) {
+      registerHandler(ItemTypes.BOX, {
         dropTarget: {
           acceptDrop(component, item, e) {
-            var startOffset = DragDropStore.getDragStartOffset(),
-                offset = DragDropStore.getDragOffset();
-
-            var left = Math.round((offset.x - startOffset.x)),
-                top = Math.round((offset.y - startOffset.y));
+            var startOffset = context.getDragStartOffsetFromClient(),
+                lastOffset = context.getDragOffsetFromClient(),
+                left = Math.round(item.left + lastOffset.x - startOffset.x),
+                top = Math.round(item.top + lastOffset.y - startOffset.y);
 
             component.moveBox(item.id, left, top);
           }

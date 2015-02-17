@@ -9,7 +9,7 @@ var HorizontalDragAnchors = require('../constants/HorizontalDragAnchors'),
  * Returns offset to be used as arguments for `dataTransfer.setDragImage(dragImage, x, y)`.
  * Attempts to work around browser differences, especially on high-DPI screens.
  */
-function getDragImageOffset(containerNode, dragPreview, dragAnchors, dragStartOffset) {
+function getDragImageOffset(containerNode, dragPreview, dragAnchors, offsetFromContainer) {
   dragAnchors = dragAnchors || {};
 
   var containerWidth = containerNode.offsetWidth,
@@ -19,7 +19,7 @@ function getDragImageOffset(containerNode, dragPreview, dragAnchors, dragStartOf
       previewHeight = isImage ? dragPreview.height : containerHeight,
       horizontalAnchor = dragAnchors.horizontal || HorizontalDragAnchors.CENTER,
       verticalAnchor = dragAnchors.vertical || VerticalDragAnchors.CENTER,
-      { x, y } = dragStartOffset;
+      { x, y } = offsetFromContainer;
 
   // Work around @2x coordinate discrepancies in browsers
   if (isSafari()) {
