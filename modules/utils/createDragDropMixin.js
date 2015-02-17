@@ -217,8 +217,6 @@ function createDragDropMixin(backend) {
           },
           { item, dragPreview, dragAnchors, effectsAllowed } = dragOptions;
 
-      debugger
-
       if (!effectsAllowed) {
         // Move is a sensible default drag effect.
         // Browser shows a drag preview anyway so we usually don't want "+" icon.
