@@ -177,8 +177,7 @@ var HTML5 = {
     };
   },
 
-  getDragClientOffset(e) {
-    // TODO: should this accept a component?
+  getDragClientOffset(component, e) {
     return {
       x: e.clientX,
       y: e.clientY

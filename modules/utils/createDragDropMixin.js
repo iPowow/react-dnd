@@ -210,12 +210,14 @@ function createDragDropMixin(backend) {
           // TODO: there should be a better way to calculate all these offsets
           containerNode = this.getDOMNode(),
           containerRect = containerNode.getBoundingClientRect(),
-          dragOffset = backend.getDragClientOffset(e),
-          dragStartOffset = {
-            x: dragOffset.x - containerRect.left,
-            y: dragOffset.y - containerRect.top
-          },
-          { item, dragPreview, dragAnchors, effectsAllowed } = dragOptions;
+          { item, dragPreview, dragAnchors, effectsAllowed } = dragOptions,
+          dragOffset = backend.getDragClientOffset(this, e),
+          dragStartOffset;
+
+      dragStartOffset = {
+        x: dragOffset.x - containerRect.left,
+        y: dragOffset.y - containerRect.top
+      };
 
       if (!effectsAllowed) {
         // Move is a sensible default drag effect.
