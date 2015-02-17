@@ -138,7 +138,12 @@ function createDragDropMixin(backend) {
       this._dragSources = {};
       this._dropTargets = {};
 
-      invariant(this.constructor.configureDragDrop, 'Implement configureDragDrop(registerType) to use DragDropMixin');
+      invariant(
+        this.constructor.configureDragDrop,
+        '%s must implement static configureDragDrop(registerType) to use DragDropMixin',
+        this.constructor.displayName
+      );
+
       this.constructor.configureDragDrop(this.registerDragDropItemTypeHandlers);
     },
 
@@ -211,6 +216,8 @@ function createDragDropMixin(backend) {
             y: dragOffset.y - containerRect.top
           },
           { item, dragPreview, dragAnchors, effectsAllowed } = dragOptions;
+
+      debugger
 
       if (!effectsAllowed) {
         // Move is a sensible default drag effect.

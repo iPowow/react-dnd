@@ -1,29 +1,44 @@
-/** @jsx React.DOM */
 'use strict';
 
 var React = require('react'),
-    Box = require('./Box'),
+    ItemTypes = require('./ItemTypes'),
+    BoxDragPreview = require('./BoxDragPreview'),
     { DragLayerMixin } = require('react-dnd');
 
 var DragLayer = React.createClass({
   mixins: [DragLayerMixin],
+
+  renderItem(type, item) {
+    switch (type) {
+    case ItemTypes.BOX:
+      return (
+        <BoxDragPreview title={item.title} />
+      );
+    }
+  },
 
   render() {
     var {
       x,
       y,
       draggedItem,
+      draggedItemType,
       isDragging
     } = this.state;
 
+    if (this.props.snapToGrid) {
+      x = Math.round(x / 32) * 32;
+      y = Math.round(y / 32) * 32;
+    }
+
     var transform;
     if (isDragging) {
-      transform = `translate3d(${x}px, ${y}px, 0)`;
+      transform = `translate(${x}px, ${y}px)`;
     }
 
     return (
       <div style={{
-        position: 'absolute',
+        position: 'fixed',
         pointerEvents: 'none',
         zIndex: 100,
         left: 0,
@@ -33,20 +48,10 @@ var DragLayer = React.createClass({
       }}>
         {isDragging &&
           <div style={{
-            position: 'fixed',
-            left: 0,
-            top: 0,
             transform: transform,
             WebkitTransform: transform,
-            width: '100%',
-            height: '100%'
           }}>
-            <Box left={0}
-                 top={0}
-                 id={draggedItem.id}
-                 isDragFeedback>
-              {draggedItem.children}
-            </Box>
+            {this.renderItem(draggedItemType, draggedItem)}
           </div>
         }
       </div>

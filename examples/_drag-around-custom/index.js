@@ -2,6 +2,7 @@
 
 var React = require('react'),
     Container = require('./Container'),
+    DragLayer = require('./DragLayer'),
     LinkedStateMixin = require('react/lib/LinkedStateMixin');
 
 var DragAroundCustom = React.createClass({
@@ -16,7 +17,8 @@ var DragAroundCustom = React.createClass({
   render() {
     return (
       <div>
-        <Container snapToGrid={this.state.snapToGrid} />
+        <Container />
+        <DragLayer snapToGrid={this.state.snapToGrid} />
         <p>
           <input type='checkbox'
                  checkedLink={this.linkState('snapToGrid')}>

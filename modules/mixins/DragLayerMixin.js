@@ -10,10 +10,12 @@ var DragFeedbackMixin = {
   getStateFromDragDropStore() {
     var dragStartOffset = DragDropStore.getDragStartOffset(),
         dragOffset = DragDropStore.getDragOffset(),
-        isDragging = DragDropStore.getDraggedItemType() !== null;
+        draggedItemType = DragDropStore.getDraggedItemType(),
+        isDragging = draggedItemType !== null;
 
     return {
       isDragging: isDragging,
+      draggedItemType: draggedItemType,
       draggedItem: DragDropStore.getDraggedItem(),
       x: isDragging ? dragOffset.x - dragStartOffset.x : undefined,
       y: isDragging ? dragOffset.y - dragStartOffset.y : undefined
