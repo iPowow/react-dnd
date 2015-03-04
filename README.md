@@ -1,7 +1,7 @@
-react-dnd
+React DnD
 =========
 
-[![Join the chat at https://gitter.im/gaearon/react-dnd](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gaearon/react-dnd?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/gaearon/react-dnd](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gaearon/react-dnd?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  
 
 Drag and drop for React with full DOM control. 
 
@@ -16,7 +16,7 @@ Currently works on top of HTML5 drag-and-drop API, but is moving towards a swapp
 
 ## Live Demo
 
-#### [See it in action!](http://gaearon.github.io/react-dnd/)
+#### [See it in action!](http://gaearon.github.io/react-dnd/) ([Source](https://github.com/gaearon/react-dnd/tree/master/examples))
 
 Demo contains a variety of things you can implement with this library, including:
 
@@ -46,6 +46,10 @@ You can do much more, but these examples will help you get started!
 
 ## Documentation
 
+### SemVer
+
+We plan to follow SemVer after 1.0. Before 1.0, minor version bumps may contain breaking changes. Breaking changes will be documented in the **[Upgrade Guide](https://github.com/gaearon/react-dnd/blob/master/docs/UPGRADE_GUIDE.md)**.
+
 ### API Reference
 
 Complete API reference is available **[here](https://github.com/gaearon/react-dnd/tree/master/docs/API.md)**.
@@ -66,7 +70,7 @@ npm start
 open http://localhost:8080/
 ```
 
-Examples use [ES6 syntax](https://babeljs.io/docs/learn-es6/).
+Examples use **[ES6 syntax](https://babeljs.io/docs/learn-es6/)** via **[Babel](https://babeljs.io/)** transpiler. You can still use React DnD in an ES5 codebase, but if you copy code from examples, make sure you translate it to ES5 where needed.
 
 ## Installation
 
@@ -84,7 +88,7 @@ npm install --save react-dnd
 
 ## Production Usage
 
-* [Stampsy](http://stampsy.com), where it was originally developed, is using react-dnd for the post editor.
+* [Stampsy](http://stampsy.com), where it was originally developed, is using React DnD for the post editor.
 * [Add your company!](https://github.com/gaearon/react-dnd/edit/master/README.md)
 
 ## See Also

@@ -10,6 +10,8 @@ var DragDropActionCreators = require('../actions/DragDropActionCreators'),
     shallowEqual = require('react/lib/shallowEqual'),
     isWebkit = require('../utils/isWebkit');
 
+const ELEMENT_NODE = 1;
+
 // Store global state for browser-specific fixes and workarounds
 var _monitor = new EnterLeaveMonitor(),
     _currentDragTarget,
@@ -19,9 +21,24 @@ var _monitor = new EnterLeaveMonitor(),
     _currentDropEffect;
 
 function getElementRect(el) {
+  if (el.nodeType !== ELEMENT_NODE) {
+    el = el.parentElement;
+  }
+
+  if (!el) {
+    return null;
+  }
+
   var rect = el.getBoundingClientRect();
   // Copy so object doesn't get reused
   return { top: rect.top, left: rect.left, width: rect.width, height: rect.height };
+}
+
+function getClientOffset(e) {
+  return {
+    x: e.clientX,
+    y: e.clientY
+  };
 }
 
 function checkIfCurrentDragTargetRectChanged() {
@@ -52,15 +69,22 @@ function preventDefaultNativeDropAction(e) {
   }
 }
 
+function handleTopDragStart(e) {
+  // If by this time no drag source reacted, tell browser not to drag.
+  if (!isNativeDragDropEvent(e) && !DragOperationStore.isDragging()) {
+    e.preventDefault();
+  }
+}
+
 function handleTopDragEnter(e) {
   // IE requires this to not show a nodrag icon over the container
   e.preventDefault();
 
   var isFirstEnter = _monitor.enter(e.target);
   if (isFirstEnter) {
-    if(isFileDragDropEvent(e)){
+    if (isFileDragDropEvent(e)) {
       DragDropActionCreators.startDragging(NativeDragItemTypes.FILE, null);
-    } else if (isUrlDragDropEvent(e)){
+    } else if (isUrlDragDropEvent(e)) {
       DragDropActionCreators.startDragging(NativeDragItemTypes.URL, null);
     }
   }
@@ -69,7 +93,7 @@ function handleTopDragEnter(e) {
 function handleTopDragOver(e) {
   preventDefaultNativeDropAction(e);
 
-  var offsetFromClient = HTML5.getOffsetFromClient(_currentComponent, e);
+  var offsetFromClient = getClientOffset(e);
   DragDropActionCreators.drag(offsetFromClient);
 
   // At the top level of event bubbling, use previously set drop effect and reset it.
@@ -106,22 +130,24 @@ function handleTopDrop(e) {
 }
 
 var HTML5 = {
-  setup(component) {
+  setup() {
     if (typeof window === 'undefined') {
       return;
     }
 
+    window.addEventListener('dragstart', handleTopDragStart);
     window.addEventListener('dragenter', handleTopDragEnter);
     window.addEventListener('dragover', handleTopDragOver);
     window.addEventListener('dragleave', handleTopDragLeave);
     window.addEventListener('drop', handleTopDrop);
   },
 
-  teardown(component) {
+  teardown() {
     if (typeof window === 'undefined') {
       return;
     }
 
+    window.removeEventListener('dragstart', handleTopDragStart);
     window.removeEventListener('dragenter', handleTopDragEnter);
     window.removeEventListener('dragover', handleTopDragOver);
     window.removeEventListener('dragleave', handleTopDragLeave);
@@ -143,7 +169,7 @@ var HTML5 = {
     window.addEventListener('mousemove', triggerDragEndIfDragSourceWasRemovedFromDOM, true);
   },
 
-  endDrag(component) {
+  endDrag() {
     _currentDragTarget = null;
     _currentComponent = null;
     _initialDragTargetRect = null;
@@ -177,10 +203,7 @@ var HTML5 = {
   },
 
   getOffsetFromClient(component, e) {
-    return {
-      x: e.clientX,
-      y: e.clientY
-    };
+    return getClientOffset(e);
   }
 };
 

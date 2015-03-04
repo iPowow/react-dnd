@@ -14,7 +14,7 @@ module.exports = {
 };
 ```
 
-These types are just string constants that are used to match compatible drag sources and drop targets. Even if you only plan to have one draggable type of items, it's still neccessary to declare a string constant for it. This makes it trivial to later add additional draggable/droppable types without rewriting half of your drag and drop code. Also, always relying on types allows us to elegantly support file drag and drop via a “builtin” `NativeDragItemTypes.FILE` type.
+These types are just string constants that are used to match compatible drag sources and drop targets. Even if you only plan to have one draggable type of items, it's still neccessary to declare a string constant for it. This makes it trivial to later add additional draggable/droppable types without rewriting half of your drag and drop code. Also, always relying on types allows us to elegantly support file and URL drag and drop via a “builtin” `NativeDragItemTypes.FILE` and `NativeDragItemTypes.URL` types.
 
 Let's make a very simple draggable component that, when dragged, represents `IMAGE`:
 
@@ -243,4 +243,4 @@ I have not covered everything but it's possible to use this API in a few more wa
 * Say, we want to make `ImageBlock`s reorderable. We only need them to implement `dropTarget` and `dragSource` for `ItemTypes.BLOCK`.
 * Suppose we add other kinds of blocks. We can reuse their reordering logic by placing it in a mixin.
 * `dropTargetFor(...types)` allows to specify several types at once, so one drop zone can catch many different types.
-* When you need more fine-grained control, most methods are passed drag event that caused them as the last parameter.
+* Use `context` (second parameter on `configureDragDrop`) to query mouse position delta.

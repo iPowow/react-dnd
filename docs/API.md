@@ -1,5 +1,7 @@
 # API
 
+Something changed? See [Upgrade Guide](https://github.com/gaearon/react-dnd/blob/master/docs/UPGRADE_GUIDE.md).
+
 ## `require('react-dnd')`
 
 Entry point. Returns:
@@ -21,7 +23,7 @@ Entry point. Returns:
 
 Implement to specify drag behavior of a component:
 
-##### `beginDrag(component: ReactComponent, e: SyntheticEvent)`
+##### `beginDrag(component: ReactComponent)`
 
 Return value must contain `item: Object` representing your data. Other fields are optional:
 
@@ -37,27 +39,25 @@ Return value must contain `item: Object` representing your data. Other fields ar
 }
 ```
 
-##### `canDrag(component: ReactComponent, e: SyntheticEvent)`
+##### `canDrag(component: ReactComponent)`
 
 Optionally decide whether to allow dragging. Default implementation returns `true`.
 
-##### `endDrag(component: ReactComponent, effect: DropEffect?, e: SyntheticEvent)`
+##### `endDrag(component: ReactComponent, effect: DropEffect?)`
 
 Optionally handle the end of dragging operation. `effect` is falsy if item was dropped outside compatible drop targets, or if the drop target returned `null` from `getDropEffect()`.
 
 ## Drop Target API
 
-##### `enter(component: ReactComponent, item: Object, e: SyntheticEvent)`
+##### `enter(component: ReactComponent, item: Object)`
 
-##### `leave(component: ReactComponent, item: Object, e: SyntheticEvent)`
+##### `leave(component: ReactComponent, item: Object)`
 
-##### `over(component: ReactComponent, item: Object, e: SyntheticEvent)`
+##### `over(component: ReactComponent, item: Object)`
 
 You can use these methods to perform side effects in response to changing drag state. For example, you might use `over` for reordering items when they overlap.
 
 If you need to render different states when drop target is active or hovered, it is easier to use `this.getDropState(type)` in `render` method.
-
-Note that you **don't** need to call `preventDefault` in any of these methods. Most of the times it's better that you don't use `e` argument at all, as it may be deprecated later.
 
 ##### `canDrop(component: ReactComponent, item: Object): Boolean`
 
@@ -67,7 +67,7 @@ Optionally implement this method to reject some of the items.
 
 Optionally implement this method to specify drop effect that will be used by some browser for cursor, and will be passed to drag source's `endDrag`. This allows drag source and drop target negotiate whether operation represents copying or moving an item. Returned drop effect must be one of the `effectsAllowed` specified by drag source or `null`. Default implementation returns `effectsAllowed[0]`.
 
-##### `acceptDrop(component: ReactComponent, item: Object, e: SyntheticEvent, isHandled: bool, effect: DropEffect?)`
+##### `acceptDrop(component: ReactComponent, item: Object, isHandled: bool, effect: DropEffect?)`
 
 Optionally implement this method to perform some action when drop occurs. `isHandled` is `true` if some child drop target has already handled the drop. `effect` is the drop effect you returned from `getDropEffect`, or if `isHandled` is `true`, drop effect specified by the child drop target that has already handled the drop.
 
@@ -107,13 +107,23 @@ Returns props to be given to any DOM element you want to make a drop target. Int
 
 This object is provided as a second argument to your `configureDragDrop` method.
 
+##### `getInitialOffsetFromClient()`
+
+Returns `{ x, y }` coordinates of mouse position when dragging started in client coordinates (as opposed to coordinates within the page).
+
+##### `getCurrentOffsetFromClient()`
+
+Returns `{ x, y }` coordinates of the last recorded mouse position in client coordinates (as opposed to coordinates within the page).
+
 ##### `getCurrentOffsetDelta()`
 
-Returns `{ x, y }` coordinate delta between current mouse position and its position when dragging started.
+Returns relative `{ x, y }` coordinate delta between last recorded mouse position and its position when dragging started.
 
 ## `DragLayerMixin`
 
 Allows you to draw a custom drag layer. This can be used in combination with returning a transparent one-pixel image as `dragPreview` from `beginDrag` so that only your custom layer is visible.
+
+If you have performance problems due to drag layer redrawing on every position change, you should use [`PureRenderMixin`](http://facebook.github.io/react/docs/pure-render-mixin.html) (or manually implement [`shouldComponentUpdate`](http://facebook.github.io/react/docs/advanced-performance.html)) in child components to avoid reconciling them.
 
 ##### `getDragLayerState()`
 
@@ -169,7 +179,7 @@ Note that, for best results, you want to use `this.getDragImageScale()`. It will
 
 ## `NativeDragItemTypes`
 
-Provides a single constant, `NativeDragItemTypes.FILE`, that you can use as an item type for file drop targets.
+Provides two constants, `NativeDragItemTypes.FILE` and `NativeDragItemTypes.URL`, that you can use as an item type for native file and URL drop targets.
 
 ## `DropEffects`
 
